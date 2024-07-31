@@ -67,3 +67,58 @@ class FallingObject:
 
     def fall(self):
         self.rect.y += OBJECT_FALL_SPEED
+
+def draw(self):
+        pygame.draw.rect(screen, OBJECT_COLOR, self.rect)
+
+# Power-up class
+class PowerUp:
+    def __init__(self):
+        x = random.randint(0, SCREEN_WIDTH - POWERUP_WIDTH)
+        self.rect = pygame.Rect(x, 0, POWERUP_WIDTH, POWERUP_HEIGHT)
+
+    def fall(self):
+        self.rect.y += OBJECT_FALL_SPEED
+
+    def draw(self):
+        pygame.draw.rect(screen, POWERUP_COLOR, self.rect)
+
+# Start screen
+def show_start_screen():
+    screen.fill(BACKGROUND_COLOR)
+    title_font = pygame.font.Font(None, 74)
+    title_text = title_font.render("Catch the Falling Objects", True, (0, 0, 0))
+    screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 4))
+    instructions_font = pygame.font.Font(None, 36)
+    instructions_text = instructions_font.render("Press any key to start", True, (0, 0, 0))
+    screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT // 2))
+    pygame.display.flip()
+
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                waiting = False
+
+# Game over screen
+def show_game_over_screen(score, level, objects_caught, high_score):
+    screen.fill(BACKGROUND_COLOR)
+    game_over_font = pygame.font.Font(None, 74)
+    game_over_text = game_over_font.render("Game Over", True, (255, 0, 0))
+    screen.blit(game_over_text, (SCREEN_WIDTH // 2 - game_over_text.get_width() // 2, SCREEN_HEIGHT // 4))
+    score_font = pygame.font.Font(None, 36)
+    score_text = score_font.render(f"Your Score: {score}", True, (0, 0, 0))
+    screen.blit(score_text, (SCREEN_WIDTH // 2 - score_text.get_width() // 2, SCREEN_HEIGHT // 2))
+    level_text = score_font.render(f"Level Reached: {level}", True, (0, 0, 0))
+    screen.blit(level_text, (SCREEN_WIDTH // 2 - level_text.get_width() // 2, SCREEN_HEIGHT // 2 + 40))
+    objects_text = score_font.render(f"Objects Caught: {objects_caught}", True, (0, 0, 0))
+    screen.blit(objects_text, (SCREEN_WIDTH // 2 - objects_text.get_width() // 2, SCREEN_HEIGHT // 2 + 80))
+    high_score_text = score_font.render(f"High Score: {high_score}", True, (0, 0, 0))
+    screen.blit(high_score_text, (SCREEN_WIDTH // 2 - high_score_text.get_width() // 2, SCREEN_HEIGHT // 2 + 120))
+    instructions_font = pygame.font.Font(None, 36)
+    instructions_text = instructions_font.render("Press any key to restart", True, (0, 0, 0))
+    screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT // 2 + 160))
+    pygame.display.flip()
