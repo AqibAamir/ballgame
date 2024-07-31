@@ -122,3 +122,49 @@ def show_game_over_screen(score, level, objects_caught, high_score):
     instructions_text = instructions_font.render("Press any key to restart", True, (0, 0, 0))
     screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT // 2 + 160))
     pygame.display.flip()
+
+waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                waiting = False
+
+# Pause screen
+def show_pause_screen():
+    pause_font = pygame.font.Font(None, 74)
+    pause_text = pause_font.render("Paused", True, (0, 0, 0))
+    screen.blit(pause_text, (SCREEN_WIDTH // 2 - pause_text.get_width() // 2, SCREEN_HEIGHT // 2))
+    pygame.display.flip()
+
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    paused = False
+
+# Initialize game variables
+basket = Basket()
+objects = []
+powerups = []
+frame_count = 0
+score = 0
+level = 1
+objects_caught = 0
+high_score = 0
+font = pygame.font.Font(None, 36)
+game_over = False
+
+# Main game loop
+def main():
+    global basket, objects, powerups, frame_count, score, level, objects_caught, high_score, game_over
+
+    while True:
+        # Start screen
+        show_start_screen()
