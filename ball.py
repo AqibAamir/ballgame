@@ -168,3 +168,50 @@ def main():
     while True:
         # Start screen
         show_start_screen()
+
+ # Initialize game variables for a new game
+        basket = Basket()
+        objects = []
+        powerups = []
+        frame_count = 0
+        score = 0
+        level = 1
+        objects_caught = 0
+        game_over = False
+
+        while not game_over:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        show_pause_screen()
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                basket.move(-BASKET_SPEED)
+            if keys[pygame.K_RIGHT]:
+                basket.move(BASKET_SPEED)
+
+            frame_count += 1
+            if frame_count % NEW_OBJECT_INTERVAL == 0:
+                objects.append(FallingObject())
+            if frame_count % POWERUP_INTERVAL == 0:
+                powerups.append(PowerUp())
+
+            for obj in objects:
+                obj.fall()
+                if obj.rect.colliderect(basket.rect):
+                    objects.remove(obj)
+                    score += 1
+                    objects_caught += 1
+                    catch_sound.play()
+                    if objects_caught % 10 == 0:
+                        level += 1
+                        global OBJECT_FALL_SPEED
+                        OBJECT_FALL_SPEED += 1
+                elif obj.rect.y > SCREEN_HEIGHT:
+                    game_over = True
+                    game_over_sound.play()
+
