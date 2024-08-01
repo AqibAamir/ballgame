@@ -214,4 +214,37 @@ def main():
                 elif obj.rect.y > SCREEN_HEIGHT:
                     game_over = True
                     game_over_sound.play()
+for powerup in powerups:
+                powerup.fall()
+                if powerup.rect.colliderect(basket.rect):
+                    powerups.remove(powerup)
+                    powerup_sound.play()
+                    score += 5  # Power-up gives extra points
+                elif powerup.rect.y > SCREEN_HEIGHT:
+                    powerups.remove(powerup)
+
+            screen.fill(BACKGROUND_COLOR)
+            basket.draw()
+            for obj in objects:
+                obj.draw()
+            for powerup in powerups:
+                powerup.draw()
+
+            score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+            screen.blit(score_text, (10, 10))
+            level_text = font.render(f"Level: {level}", True, (0, 0, 0))
+            screen.blit(level_text, (SCREEN_WIDTH - 150, 10))
+
+            pygame.display.flip()
+            pygame.time.Clock().tick(60)
+
+        # Update high score
+        if score > high_score:
+            high_score = score
+
+        # Game over screen
+        show_game_over_screen(score, level, objects_caught, high_score)
+
+if __name__ == "__main__":
+    main()
 
