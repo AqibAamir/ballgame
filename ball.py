@@ -68,7 +68,7 @@ class FallingObject:
     def fall(self):
         self.rect.y += OBJECT_FALL_SPEED
 
-def draw(self):
+    def draw(self):
         pygame.draw.rect(screen, OBJECT_COLOR, self.rect)
 
 # Power-up class
@@ -123,7 +123,7 @@ def show_game_over_screen(score, level, objects_caught, high_score):
     screen.blit(instructions_text, (SCREEN_WIDTH // 2 - instructions_text.get_width() // 2, SCREEN_HEIGHT // 2 + 160))
     pygame.display.flip()
 
-waiting = True
+    waiting = True
     while waiting:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -134,6 +134,7 @@ waiting = True
 
 # Pause screen
 def show_pause_screen():
+    screen.fill(BACKGROUND_COLOR)
     pause_font = pygame.font.Font(None, 74)
     pause_text = pause_font.render("Paused", True, (0, 0, 0))
     screen.blit(pause_text, (SCREEN_WIDTH // 2 - pause_text.get_width() // 2, SCREEN_HEIGHT // 2))
@@ -169,7 +170,7 @@ def main():
         # Start screen
         show_start_screen()
 
- # Initialize game variables for a new game
+        # Initialize game variables for a new game
         basket = Basket()
         objects = []
         powerups = []
@@ -200,7 +201,7 @@ def main():
             if frame_count % POWERUP_INTERVAL == 0:
                 powerups.append(PowerUp())
 
-            for obj in objects:
+            for obj in objects[:]:
                 obj.fall()
                 if obj.rect.colliderect(basket.rect):
                     objects.remove(obj)
@@ -214,7 +215,8 @@ def main():
                 elif obj.rect.y > SCREEN_HEIGHT:
                     game_over = True
                     game_over_sound.play()
-for powerup in powerups:
+
+            for powerup in powerups[:]:
                 powerup.fall()
                 if powerup.rect.colliderect(basket.rect):
                     powerups.remove(powerup)
@@ -223,6 +225,7 @@ for powerup in powerups:
                 elif powerup.rect.y > SCREEN_HEIGHT:
                     powerups.remove(powerup)
 
+            # Draw everything
             screen.fill(BACKGROUND_COLOR)
             basket.draw()
             for obj in objects:
@@ -230,6 +233,7 @@ for powerup in powerups:
             for powerup in powerups:
                 powerup.draw()
 
+            # Display score and level
             score_text = font.render(f"Score: {score}", True, (0, 0, 0))
             screen.blit(score_text, (10, 10))
             level_text = font.render(f"Level: {level}", True, (0, 0, 0))
@@ -238,9 +242,9 @@ for powerup in powerups:
             pygame.display.flip()
             pygame.time.Clock().tick(60)
 
-        # Update high score
-        if score > high_score:
-            high_score = score
+            # Update high score
+            if score > high_score:
+                high_score = score
 
         # Game over screen
         show_game_over_screen(score, level, objects_caught, high_score)
